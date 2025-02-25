@@ -1,1 +1,1 @@
-# tinitiate-ts-npm-vite-bs
+# tinitiate typescript npm vite bootstrap 
