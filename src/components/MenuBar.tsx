@@ -15,7 +15,12 @@ const MenuBar = () => {
       </button>
 
       {/* Search Bar */}
-      <input type="text" className="form-control me-3" placeholder="Search..." style={{ width: "250px" }} />
+      <input
+        type="text"
+        className="form-control me-3"
+        placeholder="Search..."
+        style={{ width: "250px" }}
+      />
 
       {/* Right-side Login & Signup */}
       <div className="ms-auto d-flex align-items-center">
@@ -30,7 +35,7 @@ const MenuBar = () => {
       {/* Hidden Menu */}
       {isMenuOpen && (
         <div className="dropdown-menu show position-absolute">
-          <Link className="dropdown-item" to="/Home">Home</Link>
+          <Link className="dropdown-item" to="/">Home</Link>
           <Link className="dropdown-item" to="/about">About</Link>
           <Link className="dropdown-item" to="/profile">Profile</Link>
           <Link className="dropdown-item" to="/contact">Contact</Link>
