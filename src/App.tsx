@@ -18,9 +18,11 @@ const App = () => {
     <div className="d-flex flex-column min-vh-100">
       <Header />
 
-      <div className="container-fluid d-flex flex-grow-1">
+      <div className="d-flex flex-grow-1" style={{ minHeight: "calc(100vh - 120px)" }}>
         {/* Left Sidebar */}
-        <LeftSidebar />
+        <div style={{ width: "220px" }}>
+          <LeftSidebar />
+        </div>
 
         {/* Main Content */}
         <div className="flex-grow-1 p-3">
@@ -33,15 +35,16 @@ const App = () => {
             <Route path="/contact" element={<Contact />} />
             <Route path="/services" element={<Services />} />
             <Route path="/catalog" element={<Catalog />} />
-            <Route path="comparison" element={<Comparison/>}/>
+            <Route path="/comparison" element={<Comparison />} />
           </Routes>
         </div>
 
-        {/* Right Sidebar */}
-        <RightSidebar />
+        {/* Optional: Right Sidebar (set fixed width too if needed) */}
+        <div style={{ width: "220px" }}>
+          <RightSidebar />
+        </div>
       </div>
 
-      {/* Footer at the bottom */}
       <Footer />
     </div>
   );

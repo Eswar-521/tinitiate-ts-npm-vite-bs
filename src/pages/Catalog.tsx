@@ -1,103 +1,87 @@
-import { useState } from "react";
-import { FaBars, FaSearch } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-// Dummy Data (100 Products)
-const productData = Array.from({ length: 100 }, (_, i) => ({
-  id: i + 1,
-  course_category: `Category ${i % 10}`,
-  course_name: `Course ${i + 1}`,
-  price: (i + 1) * 10,
-  image_path: `https://via.placeholder.com/150?text=Course+${i + 1}`,
-  description: `This is a brief description for Course ${i + 1}.`
-}));
+const generateProducts = (count = 50) => {
+  const names = ["Laptop", "Phone", "Camera", "Tablet", "Speaker", "Watch", "Monitor", "Keyboard", "Mouse", "Drone"];
+  const specsList = ["8GB RAM", "16GB RAM", "256GB SSD", "512GB SSD", "4K Display", "Touchscreen", "Wireless", "GPS", "Heart Rate", "Waterproof"];
 
-const Catalog = () => {
+  return Array.from({ length: count }, (_, i) => ({
+    id: i + 1,
+    name: `${names[i % names.length]} ${i + 1}`,
+    image: `https://picsum.photos/seed/${i + 1}/200/150`,
+    specs: `${specsList[i % specsList.length]}, ${specsList[(i + 3) % specsList.length]}`,
+    price: (Math.floor((i + 1) * 1000) + 10000).toLocaleString("en-IN", {
+      style: "currency",
+      currency: "INR",
+    }),
+  }));
+};
+
+const CatalogPage = () => {
+  const [products] = useState(() => {
+    const existing = localStorage.getItem("products");
+    if (existing) return JSON.parse(existing);
+    const newProducts = generateProducts();
+    localStorage.setItem("products", JSON.stringify(newProducts));
+    return newProducts;
+  });
+
+  const [selectedIds, setSelectedIds] = useState(() => {
+    const saved = localStorage.getItem("selectedIds");
+    return saved ? JSON.parse(saved) : [];
+  });
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredProducts, setFilteredProducts] = useState(productData);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
-  // Handle Search
-  const handleSearch = () => {
-    const lowerCaseSearch = searchTerm.toLowerCase();
+  useEffect(() => {
+    localStorage.setItem("selectedIds", JSON.stringify(selectedIds));
+  }, [selectedIds]);
 
-    const filtered = productData.filter((product) =>
-      product.course_name.toLowerCase().includes(lowerCaseSearch) ||
-      product.course_category.toLowerCase().includes(lowerCaseSearch) ||
-      product.price.toString().includes(lowerCaseSearch)
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((pid) => pid !== id) : [...prev, id]
     );
-
-    setFilteredProducts(filtered);
   };
 
-  // Handle "Enter" Key Press
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") {
-      handleSearch();
-    }
-  };
-
-  // Add Product to Comparison Table
-  const addToComparison = (product: any) => {
-    const savedComparison = localStorage.getItem("comparisonList");
-    const comparisonList = savedComparison ? JSON.parse(savedComparison) : [];
-
-    if (!comparisonList.some((item) => item.id === product.id)) {
-      const updatedComparison = [...comparisonList, product];
-      localStorage.setItem("comparisonList", JSON.stringify(updatedComparison));
-    }
-  };
+  const filteredProducts = products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      p.id.toString().includes(searchTerm)
+  );
 
   return (
-    <div className="container">
-      {/* Menu Bar */}
-      <nav className="navbar navbar-expand-lg navbar-light bg-light px-3 mb-3">
-        <button className="btn btn-primary me-2" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-          <FaBars /> Menu
-        </button>
-
-        {/* Search Bar */}
-        <input
-          type="text"
-          className="form-control me-2"
-          placeholder="Search in Catalog..."
-          style={{ width: "250px" }}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyDown={handleKeyPress}
-        />
-        <button className="btn btn-success" onClick={handleSearch}>
-          <FaSearch /> Search
-        </button>
-
-        {/* Hidden Menu */}
-        {isMenuOpen && (
-          <div className="dropdown-menu show position-absolute">
-            <Link className="dropdown-item" to="/services">Services</Link>
-            <Link className="dropdown-item" to="/comparison">Comparison</Link>
-          </div>
-        )}
-      </nav>
-
-      {/* Catalog Content */}
-      <h2>Catalog Page</h2>
-      <p>Displaying {filteredProducts.length} results for: "{searchTerm}"</p>
-
-      {/* Product Cards */}
-      <div className="row">
-        {filteredProducts.map((product) => (
-          <div key={product.id} className="col-md-3 mb-4">
-            <div className="card">
-              <img src={product.image_path} className="card-img-top" alt={product.course_name} />
-              <div className="card-body">
-                <h5 className="card-title">{product.course_name}</h5>
-                <p className="card-text">{product.description}</p>
-                <p className="text-success fw-bold">${product.price}</p>
-                <button className="btn btn-warning btn-sm" onClick={() => addToComparison(product)}>
-                  Add to Compare
-                </button>
-              </div>
-            </div>
+    <div style={{ padding: 20 }}>
+      <h2>Product Catalog</h2>
+      <input
+        type="text"
+        placeholder="Search by name or card number..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        style={{ padding: 8, marginBottom: 20, borderRadius: 10, border: '1px solid #ccc' }}
+      />
+      <button onClick={() => navigate("/comparison")} style={{ marginLeft: 10 }}>Go to Comparison</button>
+      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center" }}>
+        {filteredProducts.map((p) => (
+          <div
+            key={p.id}
+            onClick={() => toggleSelect(p.id)}
+            style={{
+              width: 220,
+              padding: 16,
+              margin: 10,
+              border: selectedIds.includes(p.id) ? "3px solid blue" : "1px solid #ccc",
+              borderRadius: 12,
+              boxShadow: "0 5px 10px rgba(0,0,0,0.1)",
+              cursor: "pointer",
+              background: "white"
+            }}
+          >
+            <h5>Card #{p.id}</h5>
+            <img src={p.image} alt={p.name} style={{ width: "100%", borderRadius: 8 }} />
+            <h4>{p.name}</h4>
+            <p>{p.specs}</p>
+            <div style={{ color: "green", fontWeight: 600 }}>{p.price}</div>
           </div>
         ))}
       </div>
@@ -105,4 +89,4 @@ const Catalog = () => {
   );
 };
 
-export default Catalog;
+export default CatalogPage;

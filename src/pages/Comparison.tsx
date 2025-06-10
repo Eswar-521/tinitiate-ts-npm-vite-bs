@@ -1,53 +1,53 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-const Comparison = () => {
-  const [comparisonList, setComparisonList] = useState([]);
+const ComparisonPage = () => {
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [products, setProducts] = useState([]);
 
-  // Load saved comparison data from local storage
   useEffect(() => {
-    const savedComparison = localStorage.getItem("comparisonList");
-    if (savedComparison) {
-      setComparisonList(JSON.parse(savedComparison));
-    }
+    const storedIds = JSON.parse(localStorage.getItem("selectedIds") || "[]");
+    const allProducts = JSON.parse(localStorage.getItem("products") || "[]");
+    setSelectedIds(storedIds);
+    setProducts(allProducts);
   }, []);
 
-  // Remove Product from Comparison Table
-  const removeFromComparison = (productId: number) => {
-    const updatedList = comparisonList.filter((item) => item.id !== productId);
-    setComparisonList(updatedList);
-    localStorage.setItem("comparisonList", JSON.stringify(updatedList)); // Update storage
+  const handleRemove = (id) => {
+    const updatedIds = selectedIds.filter((pid) => pid !== id);
+    setSelectedIds(updatedIds);
+    localStorage.setItem("selectedIds", JSON.stringify(updatedIds));
   };
 
-  return (
-    <div className="container mt-4">
-      <h2>Comparison Table</h2>
-      <Link to="/catalog" className="btn btn-primary mb-3">← Back to Catalog</Link>
+  const selectedProducts = products.filter((p) => selectedIds.includes(p.id));
 
-      {comparisonList.length === 0 ? (
-        <p>No products selected for comparison.</p>
+  return (
+    <div style={{ padding: 20 }}>
+      <h2>Comparison Table</h2>
+      {selectedProducts.length === 0 ? (
+        <p>No cards selected for comparison.</p>
       ) : (
-        <table className="table table-bordered">
+        <table style={{ width: "100%", borderCollapse: "collapse" }}>
           <thead>
-            <tr>
-              <th>Product</th>
-              <th>Category</th>
+            <tr style={{ backgroundColor: "#007bff", color: "white" }}>
+              <th>Card #</th>
+              <th>Name</th>
+              <th>Specs</th>
               <th>Price</th>
-              <th>Description</th>
+              <th>Image</th>
               <th>Remove</th>
             </tr>
           </thead>
           <tbody>
-            {comparisonList.map((product) => (
-              <tr key={product.id}>
-                <td>{product.course_name}</td>
-                <td>{product.course_category}</td>
-                <td>${product.price}</td>
-                <td>{product.description}</td>
+            {selectedProducts.map((item) => (
+              <tr key={item.id} style={{ textAlign: "center", borderBottom: "1px solid #eee" }}>
+                <td>{item.id}</td>
+                <td>{item.name}</td>
+                <td>{item.specs}</td>
+                <td>{item.price}</td>
                 <td>
-                  <button className="btn btn-danger btn-sm" onClick={() => removeFromComparison(product.id)}>
-                    Remove
-                  </button>
+                  <img src={item.image} alt={item.name} width="100" style={{ borderRadius: 8 }} />
+                </td>
+                <td>
+                  <button onClick={() => handleRemove(item.id)}>Remove</button>
                 </td>
               </tr>
             ))}
@@ -58,4 +58,4 @@ const Comparison = () => {
   );
 };
 
-export default Comparison;
+export default ComparisonPage;

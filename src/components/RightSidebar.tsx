@@ -4,15 +4,33 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 const RightSidebar = () => {
   return (
-    <div className="right-sidebar p-3 border-start bg-light">
-      <nav className="nav flex-column">
-        <Link to="/home" className="nav-link text-dark">Home</Link>
-        <Link to="/about" className="nav-link text-dark">About</Link>
-        <Link to="/catalog" className="nav-link text-dark">Catalog</Link>
-        <Link to="/login" className="btn btn-outline-primary my-2 d-flex align-items-center">
-          <FaUser className="me-3" /> Login
+    <div
+      className="right-sidebar p-4 border-start text-white"
+      style={{
+        background: "linear-gradient(to bottom right, #6a11cb, #2575fc)", // Gradient
+        minHeight: "100vh"
+      }}
+    >
+      <nav className="nav flex-column gap-3">
+        <Link to="/home" className="nav-link text-white fw-semibold">
+          Home
         </Link>
-        <Link to="/signup" className="btn btn-outline-success d-flex align-items-center">
+        <Link to="/about" className="nav-link text-white fw-semibold">
+          About
+        </Link>
+        <Link to="/catalog" className="nav-link text-white fw-semibold">
+          Catalog
+        </Link>
+        <Link
+          to="/login"
+          className="btn btn-outline-light my-2 d-flex align-items-center justify-content-center"
+        >
+          <FaUser className="me-2" /> Login
+        </Link>
+        <Link
+          to="/signup"
+          className="btn btn-outline-light d-flex align-items-center justify-content-center"
+        >
           <FaUserPlus className="me-2" /> Signup
         </Link>
       </nav>
