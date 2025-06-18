@@ -2,7 +2,7 @@ const Services = () => {
   return (
     <div
       style={{
-        background: "linear-gradient(to bottom right, #ff7e5f, #feb47b)",
+        background: "linear-gradient(to bottom right,rgb(255, 236, 95),rgb(151, 254, 123))",
         minHeight: "100vh",
         padding: "2rem",
         color: "#2c3e50",

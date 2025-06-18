@@ -1,18 +1,24 @@
-import React from 'react';
+
+import { Cpu, Package, Zap, Box } from "lucide-react"; // Icons for ts, npm, vite, bs
 
 const Header = () => {
-  const text = "ts-npm-vite-bs";
+  const parts = [
+    { label: "ts", icon: <Cpu size={28} color="#ff6b6b" /> },
+    { label: "npm", icon: <Package size={28} color="#4ecdc4" /> },
+    { label: "vite", icon: <Zap size={28} color="#f9ca24" /> },
+    { label: "bs", icon: <Box size={28} color="#6c5ce7" /> },
+  ];
 
   const colors = [
-    '#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24',
-    '#f0932b', '#eb4d4b', '#6c5ce7', '#a29bfe',
-    '#fd79a8', '#00b894',
+    "#ff6b6b", "#4ecdc4", "#45b7d1", "#f9ca24",
+    "#f0932b", "#eb4d4b", "#6c5ce7", "#a29bfe",
+    "#fd79a8", "#00b894",
   ];
 
   const getCharStyle = (index: number) => {
     const color = colors[index % colors.length];
     return {
-      color: color,
+      color,
       textShadow: `0 0 10px ${color}, 0 0 20px ${color}60`,
       animationDelay: `${index * 0.1}s`,
     };
@@ -36,23 +42,64 @@ const Header = () => {
       </style>
 
       <header
-        className="text-white text-center py-10 header-bg"
+        className="header-bg"
         style={{
+          textAlign: "center",
+          padding: "40px 0",
           boxShadow: "0 0 50px rgba(0, 0, 0, 0.4)",
           borderBottom: "2px solid #ffffff22",
         }}
       >
-        <h1 className="m-0 text-5xl font-bold tracking-widest">
-          {text.split('').map((char, index) => (
-            <span
-              key={index}
-              className="float-char inline-block transition-all duration-300 hover:scale-125 hover:rotate-12 cursor-pointer"
-              style={getCharStyle(index)}
+        <div
+          style={{
+            display: "inline-flex",
+            flexWrap: "wrap",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "16px",
+          }}
+        >
+          {parts.map((part, pIdx) => (
+            <div
+              key={pIdx}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "6px",
+              }}
             >
-              {char === '-' ? <span className="text-gray-400 mx-1">-</span> : char}
-            </span>
+              {part.icon}
+              {part.label.split("").map((char, cIdx) => (
+                <span
+                  key={cIdx}
+                  className="float-char"
+                  style={{
+                    ...getCharStyle(cIdx),
+                    fontSize: "32px",
+                    fontWeight: "bold",
+                    display: "inline-block",
+                    transition: "all 0.3s ease-in-out",
+                    cursor: "pointer",
+                  }}
+                >
+                  {char}
+                </span>
+              ))}
+              {pIdx < parts.length - 1 && (
+                <span
+                  style={{
+                    margin: "0 8px",
+                    color: "#999",
+                    fontSize: "28px",
+                    fontWeight: "lighter",
+                  }}
+                >
+                  -
+                </span>
+              )}
+            </div>
           ))}
-        </h1>
+        </div>
       </header>
     </div>
   );
