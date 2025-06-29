@@ -19,7 +19,7 @@ import Comparison1 from "./pages/Comparison1";
 import Comparison2 from "./pages/Comparison2"
 import Forgotpassword from "./pages/Forgotpassword";
 import Profile from "./pages/Profile";
-import EditProfile from "./pages/editprofile";
+import EditProfile from "./pages/EditProfile";
 import Dashboard from './pages/Dashboard';
 import DashboardAnalytics from './pages/DashboardAnalytics';
 import DashboardReports from './pages/DashboardReports';

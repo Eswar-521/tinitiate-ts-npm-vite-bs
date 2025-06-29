@@ -113,7 +113,7 @@ const LeftSidebar = () => {
         {profileDropdownOpen && (
           <div className="ms-3">
             <Link to="/profile" className="nav-link text-white py-1">My Profile</Link>
-            <Link to="/edit-profile" className="nav-link text-white py-1">Edit Profile</Link>
+            <Link to="/editprofile" className="nav-link text-white py-1">Edit Profile</Link>
           </div>
         )}
 
